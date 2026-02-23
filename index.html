@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduManage - Online Course Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-graduation-cap"></i>
+            <span>EduManage</span>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="#" class="nav-link active" data-page="home">Home</a>
+            <a href="#" class="nav-link" data-page="courses">Courses</a>
+            <a href="#" class="nav-link" data-page="about">About</a>
+        </div>
+        <div class="nav-auth" id="navAuth">
+            <button class="btn btn-outline" onclick="showModal('loginModal')">Login</button>
+            <button class="btn btn-primary" onclick="showModal('registerModal')">Register</button>
+        </div>
+        <div class="nav-user hidden" id="navUser">
+            <span class="user-name" id="userName">User</span>
+            <button class="btn btn-outline" onclick="logout()">Logout</button>
+        </div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <section class="page active" id="homePage">
+        <div class="hero">
+            <div class="hero-content">
+                <h1>Transform Your Teaching Experience</h1>
+                <p>Create, manage, and deliver online courses with ease. Empower educators and students to achieve their learning goals.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary btn-lg" onclick="showModal('registerModal')">Get Started</button>
+                    <button class="btn btn-outline btn-lg" onclick="scrollToSection('features')">Learn More</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-card card-1">
+                    <i class="fas fa-video"></i>
+                    <span>Video Lessons</span>
+                </div>
+                <div class="floating-card card-2">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Assignments</span>
+                </div>
+                <div class="floating-card card-3">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Progress Tracking</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="features" id="features">
+            <h2>Why Choose EduManage?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>For Educators</h3>
+                    <p>Create and manage courses, track student progress, and assess assignments efficiently.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>For Students</h3>
+                    <p>Enroll in courses, access materials, submit assignments, and track your progress.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Responsive Design</h3>
+                    <p>Access your courses from any device - desktop, tablet, or mobile.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure Platform</h3>
+                    <p>Your data is safe with our secure authentication and encryption.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number" data-count="5000">0</span>
+                <span class="stat-label">Students</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-count="200">0</span>
+                <span class="stat-label">Courses</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-count="50">0</span>
+                <span class="stat-label">Educators</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Page -->
+    <section class="page" id="coursesPage">
+        <div class="page-header">
+            <h1>Explore Courses</h1>
+            <div class="search-bar">
+                <input type="text" id="courseSearch" placeholder="Search courses..." oninput="searchCourses()">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div class="courses-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="programming">Programming</button>
+            <button class="filter-btn" data-filter="design">Design</button>
+            <button class="filter-btn" data-filter="business">Business</button>
+            <button class="filter-btn" data-filter="science">Science</button>
+        </div>
+        <div class="courses-grid" id="coursesGrid">
+            <!-- Courses will be populated by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Dashboard Page (For both Educator and Student) -->
+    <section class="page" id="dashboardPage">
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+            <div class="role-toggle" id="roleToggle">
+                <button class="toggle-btn active" data-role="student" onclick="switchRole('student')">Student View</button>
+                <button class="toggle-btn" data-role="educator" onclick="switchRole('educator')">Educator View</button>
+            </div>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div class="dashboard-content" id="studentDashboard">
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <i class="fas fa-book"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="enrolledCourses">0</span>
+                        <span class="stat-label">Enrolled Courses</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="completedAssignments">0</span>
+                        <span class="stat-label">Completed</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="pendingAssignments">0</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-star"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="avgGrade">0%</span>
+                        <span class="stat-label">Average Grade</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-book-open"></i> My Courses</h3>
+                    <div class="course-list" id="enrolledCoursesList">
+                        <!-- Enrolled courses will be populated here -->
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-tasks"></i> Pending Assignments</h3>
+                    <div class="assignment-list" id="pendingAssignmentsList">
+                        <!-- Pending assignments will be populated here -->
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-chart-bar"></i> Progress Overview</h3>
+                    <div class="progress-chart" id="progressChart">
+                        <!-- Progress will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Educator Dashboard -->
+        <div class="dashboard-content hidden" id="educatorDashboard">
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <i class="fas fa-chalkboard"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalCourses">0</span>
+                        <span class="stat-label">Total Courses</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalStudents">0</span>
+                        <span class="stat-label">Total Students</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-file-signature"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalAssignments">0</span>
+                        <span class="stat-label">Assignments</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-star"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" id="avgRating">4.8</span>
+                        <span class="stat-label">Avg Rating</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-book"></i> My Courses</h3>
+                        <button class="btn btn-primary" onclick="showModal('createCourseModal')">
+                            <i class="fas fa-plus"></i> New Course
+                        </button>
+                    </div>
+                    <div class="course-list" id="myCoursesList">
+                        <!-- Educator's courses will be populated here -->
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-user-graduate"></i> Recent Enrollments</h3>
+                    <div class="enrollment-list" id="recentEnrollments">
+                        <!-- Recent enrollments will be populated here -->
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-chart-line"></i> Analytics</h3>
+                    <div class="analytics-chart" id="analyticsChart">
+                        <!-- Analytics will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Course Detail Page -->
+    <section class="page" id="courseDetailPage">
+        <div class="course-detail">
+            <div class="course-detail-header">
+                <button class="btn btn-outline" onclick="navigateTo('courses')">
+                    <i class="fas fa-arrow-left"></i> Back to Courses
+                </button>
+                <div class="course-actions">
+                    <button class="btn btn-primary" id="enrollBtn" onclick="enrollCourse()">
+                        <i class="fas fa-user-plus"></i> Enroll Now
+                    </button>
+                    <button class="btn btn-outline hidden" id="startCourseBtn" onclick="startCourse()">
+                        <i class="fas fa-play"></i> Continue Learning
+                    </button>
+                </div>
+            </div>
+            <div class="course-detail-content">
+                <div class="course-info">
+                    <div class="course-badge" id="courseCategory">Category</div>
+                    <h1 id="courseTitle">Course Title</h1>
+                    <p class="course-description" id="courseDescription">Course description...</p>
+                    <div class="course-meta">
+                        <span><i class="fas fa-user"></i> <span id="courseInstructor">Instructor</span></span>
+                        <span><i class="fas fa-clock"></i> <span id="courseDuration">0 hours</span></span>
+                        <span><i class="fas fa-users"></i> <span id="courseStudents">0 students</span></span>
+                        <span><i class="fas fa-star"></i> <span id="courseRating">0.0</span></span>
+                    </div>
+                    <div class="course-instructor">
+                        <div class="instructor-avatar" id="instructorAvatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="instructor-info">
+                            <h4 id="instructorName">Instructor Name</h4>
+                            <p>Expert Educator</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="course-sidebar">
+                    <div class="course-preview">
+                        <div class="preview-thumbnail" id="courseThumbnail">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <p>Preview this course</p>
+                    </div>
+                    <div class="course-includes">
+                        <h4>This course includes:</h4>
+                        <ul>
+                            <li><i class="fas fa-video"></i> Video lessons</li>
+                            <li><i class="fas fa-file-alt"></i> Downloadable resources</li>
+                            <li><i class="fas fa-tasks"></i> Assignments</li>
+                            <li><i class="fas fa-certificate"></i> Certificate of completion</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="course-curriculum">
+                <h2>Course Curriculum</h2>
+                <div class="curriculum-sections" id="curriculumSections">
+                    <!-- Curriculum sections will be populated here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lesson Page -->
+    <section class="page" id="lessonPage">
+        <div class="lesson-container">
+            <div class="lesson-sidebar">
+                <button class="btn btn-outline" onclick="navigateTo('courseDetail')">
+                    <i class="fas fa-arrow-left"></i> Back to Course
+                </button>
+                <h3 id="lessonCourseTitle">Course Title</h3>
+                <div class="lesson-list" id="lessonList">
+                    <!-- Lesson list will be populated here -->
+                </div>
+            </div>
+            <div class="lesson-content">
+                <div class="video-player" id="videoPlayer">
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle"></i>
+                        <p>Click to play video</p>
+                    </div>
+                </div>
+                <div class="lesson-details">
+                    <h1 id="lessonTitle">Lesson Title</h1>
+                    <p id="lessonDescription">Lesson description</p>
+                    <div class="lesson-nav">
+                        <button class="btn btn-outline" id="prevLessonBtn" onclick="prevLesson()">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        <button class="btn btn-primary" id="nextLessonBtn" onclick="nextLesson()">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="lesson-resources">
+                    <h3><i class="fas fa-download"></i> Resources</h3>
+                    <div id="lessonResources">
+                        <!-- Resources will be populated here -->
+                    </div>
+                </div>
+                <div class="lesson-assignment">
+                    <h3><i class="fas fa-tasks"></i> Assignment</h3>
+                    <div id="lessonAssignment">
+                        <!-- Assignment will be populated here -->
+                    </div>
+                    <button class="btn btn-primary" onclick="showModal('submitAssignmentModal')">
+                        <i class="fas fa-paper-plane"></i> Submit Assignment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Page -->
+    <section class="page" id="aboutPage">
+        <div class="about-hero">
+            <h1>About EduManage</h1>
+            <p>Empowering educators and students worldwide with innovative learning solutions.</p>
+        </div>
+        <div class="about-content">
+            <div class="about-section">
+                <h2>Our Mission</h2>
+                <p>We believe that quality education should be accessible to everyone. Our platform connects educators with students globally, providing tools for seamless online learning experiences.</p>
+            </div>
+            <div class="about-section">
+                <h2>Our Features</h2>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Course Creation & Management</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Student Enrollment System</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Assignment Submission & Grading</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Progress Tracking</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Interactive Video Lessons</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Certificate Generation</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-section">
+                <h2>Contact Us</h2>
+                <div class="contact-info">
+                    <p><i class="fas fa-envelope"></i> support@edumanage.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Education Street, Learning City</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Welcome Back</h2>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="Enter your password">
+                </div>
+                <div class="form-group">
+                    <label for="loginRole">Login as</label>
+                    <select id="loginRole">
+                        <option value="student">Student</option>
+                        <option value="educator">Educator</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <p class="modal-footer">Don't have an account? <a href="#" onclick="switchModal('loginModal', 'registerModal')">Register</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Create Account</h2>
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label for="registerRole">I am a</label>
+                    <select id="registerRole">
+                        <option value="student">Student</option>
+                        <option value="educator">Educator</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </form>
+            <p class="modal-footer">Already have an account? <a href="#" onclick="switchModal('registerModal', 'loginModal')">Login</a></p>
+        </div>
+    </div>
+
+    <!-- Create Course Modal (Educator) -->
+    <div class="modal" id="createCourseModal">
+        <div class="modal-content modal-lg">
+            <span class="modal-close" onclick="closeModal('createCourseModal')">&times;</span>
+            <h2>Create New Course</h2>
+            <form id="createCourseForm" onsubmit="handleCreateCourse(event)">
+                <div class="form-group">
+                    <label for="courseTitle">Course Title</label>
+                    <input type="text" id="courseTitleInput" required placeholder="Enter course title">
+                </div>
+                <div class="form-group">
+                    <label for="courseCategory">Category</label>
+                    <select id="courseCategoryInput">
+                        <option value="programming">Programming</option>
+                        <option value="design">Design</option>
+                        <option value="business">Business</option>
+                        <option value="science">Science</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="courseDescription">Description</label>
+                    <textarea id="courseDescriptionInput" rows="4" required placeholder="Describe your course"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="courseDuration">Duration (hours)</label>
+                    <input type="number" id="courseDurationInput" required placeholder="Enter duration" min="1">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Create Course</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Lesson Modal -->
+    <div class="modal" id="addLessonModal">
+        <div class="modal-content modal-lg">
+            <span class="modal-close" onclick="closeModal('addLessonModal')">&times;</span>
+            <h2>Add New Lesson</h2>
+            <form id="addLessonForm" onsubmit="handleAddLesson(event)">
+                <div class="form-group">
+                    <label for="lessonTitle">Lesson Title</label>
+                    <input type="text" id="lessonTitleInput" required placeholder="Enter lesson title">
+                </div>
+                <div class="form-group">
+                    <label for="lessonDescription">Description</label>
+                    <textarea id="lessonDescriptionInput" rows="3" required placeholder="Describe this lesson"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="lessonType">Lesson Type</label>
+                    <select id="lessonTypeInput">
+                        <option value="video">Video</option>
+                        <option value="reading">Reading</option>
+                        <option value="quiz">Quiz</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="lessonDuration">Duration (minutes)</label>
+                    <input type="number" id="lessonDurationInput" required placeholder="Enter duration" min="1">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Add Lesson</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Assignment Modal -->
+    <div class="modal" id="addAssignmentModal">
+        <div class="modal-content modal-lg">
+            <span class="modal-close" onclick="closeModal('addAssignmentModal')">&times;</span>
+            <h2>Create Assignment</h2>
+            <form id="addAssignmentForm" onsubmit="handleAddAssignment(event)">
+                <div class="form-group">
+                    <label for="assignmentTitle">Assignment Title</label>
+                    <input type="text" id="assignmentTitleInput" required placeholder="Enter assignment title">
+                </div>
+                <div class="form-group">
+                    <label for="assignmentDescription">Description</label>
+                    <textarea id="assignmentDescriptionInput" rows="4" required placeholder="Describe the assignment"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="assignmentDueDate">Due Date</label>
+                    <input type="date" id="assignmentDueDateInput" required>
+                </div>
+                <div class="form-group">
+                    <label for="assignmentPoints">Points</label>
+                    <input type="number" id="assignmentPointsInput" required placeholder="Enter points" min="1">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Create Assignment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Submit Assignment Modal -->
+    <div class="modal" id="submitAssignmentModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('submitAssignmentModal')">&times;</span>
+            <h2>Submit Assignment</h2>
+            <form id="submitAssignmentForm" onsubmit="handleSubmitAssignment(event)">
+                <div class="form-group">
+                    <label for="submissionText">Your Answer</label>
+                    <textarea id="submissionText" rows="6" required placeholder="Enter your answer"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="submissionFile">Attach File (optional)</label>
+                    <input type="file" id="submissionFile">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>EduManage</h3>
+                <p>Transforming education through technology.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#" onclick="navigateTo('home')">Home</a>
+                <a href="#" onclick="navigateTo('courses')">Courses</a>
+                <a href="#" onclick="navigateTo('about')">About</a>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 EduManage. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
